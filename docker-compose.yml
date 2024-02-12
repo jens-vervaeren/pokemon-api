@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  api:
+    container_name: poke_api
+    image: poke_api
+    build: ./api
+    stdin_open: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./api:/app
+  
+  postgres:
+    container_name: poke_api_postgres
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=""
+      - POSTGRES_DB=pokemon
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres:
