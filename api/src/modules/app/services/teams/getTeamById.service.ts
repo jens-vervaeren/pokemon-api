@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common"
+import { Injectable, NotFoundException } from "@nestjs/common"
 import { Team } from "@prisma/client"
 import { PrismaService } from "../../../prisma/services/prisma.service"
 
@@ -12,6 +12,8 @@ export class GetTeamByIdService {
         id
       }
     })
+
+    if (!foundTeam) throw new NotFoundException("Team not found")
 
     return foundTeam
   }
