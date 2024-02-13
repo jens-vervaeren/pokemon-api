@@ -42,7 +42,7 @@ model PokemonDetails {
 model Team {
   id       Int    @id @default(autoincrement())
   name     String @db.VarChar(255)
-  pokemons Int[]
+  pokemons Int[]  @default([])
 
   @@map("teams")
 }
