@@ -9,3 +9,40 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Pokemon {
+  id      Int             @id @default(autoincrement())
+  name    String          @db.VarChar(255)
+  sprites Json
+  types   Json
+  details PokemonDetails?
+
+  @@map("pokemons")
+}
+
+model PokemonDetails {
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(255)
+  sprites   Json
+  types     Json
+  height    Int
+  weight    Int
+  moves     Json
+  order     Int
+  species   String  @db.VarChar(255)
+  stats     Json
+  abilities Json
+  form      String  @db.VarChar(255)
+  pokemon   Pokemon @relation(fields: [pokemonId], references: [id])
+  pokemonId Int     @unique @map("pokemon_id")
+
+  @@map("pokemon_details")
+}
+
+model Team {
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(255)
+  pokemons Int[]
+
+  @@map("teams")
+}
