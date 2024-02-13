@@ -4,6 +4,7 @@ import { PrismaModule } from "../prisma/prisma.module"
 import { PrismaService } from "../prisma/services/prisma.service"
 import { TeamsController } from "./controllers/teams.controller"
 import { GetAllTeamsService } from "./services/teams/getAllTeams.service"
+import { GetTeamByIdService } from "./services/teams/getTeamById.service"
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { GetAllTeamsService } from "./services/teams/getAllTeams.service"
     PrismaModule
   ],
   controllers: [TeamsController],
-  providers: [PrismaService, GetAllTeamsService]
+  providers: [PrismaService, GetAllTeamsService, GetTeamByIdService]
 })
 export class AppModule {}
