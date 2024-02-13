@@ -2,6 +2,7 @@ import { NestFactory } from "@nestjs/core"
 import { VersioningType } from "@nestjs/common"
 import { AppModule } from "./modules/app/app.module"
 import { HttpErrorFilter } from "./filters/http-error.filter"
+import { ZodFilter } from "./filters/zod.filter"
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -12,6 +13,7 @@ async function bootstrap() {
   })
   // Global filters
   app.useGlobalFilters(new HttpErrorFilter())
+  app.useGlobalFilters(new ZodFilter())
   // Start application
   console.log("Application listening on port: 3000")
   await app.listen(3000)
