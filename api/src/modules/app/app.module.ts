@@ -7,6 +7,7 @@ import { TeamsController } from "./controllers/teams.controller"
 import { GetPokemonsService } from "./services/pokemons/getPokemons.service"
 import { GetPokemonsPaginatedService } from "./services/pokemons/getPokemonsPaginated.service"
 import { DoPokemonsExistInDbService } from "./services/pokemons/doPokemonsExistInDb.service"
+import { GetPokemonDetailsByPokemonIdService } from "./services/pokemons/getPokemonDetailsByPokemonId.service"
 import { GetAllTeamsService } from "./services/teams/getAllTeams.service"
 import { GetTeamByIdService } from "./services/teams/getTeamById.service"
 import { CreateTeamService } from "./services/teams/createTeam.service"
@@ -25,6 +26,7 @@ import { UpdateTeamPokemonsService } from "./services/teams/updateTeamPokemons.s
     GetPokemonsService,
     GetPokemonsPaginatedService,
     DoPokemonsExistInDbService,
+    GetPokemonDetailsByPokemonIdService,
     GetAllTeamsService,
     GetTeamByIdService,
     CreateTeamService,

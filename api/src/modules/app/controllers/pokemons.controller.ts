@@ -1,7 +1,16 @@
-import { Controller, Get, Inject, Query, Version } from "@nestjs/common"
-import { Pokemon } from "@prisma/client"
+import {
+  Controller,
+  Get,
+  Inject,
+  Param,
+  ParseIntPipe,
+  Query,
+  Version
+} from "@nestjs/common"
+import { Pokemon, PokemonDetails } from "@prisma/client"
 import { GetPokemonsService } from "../services/pokemons/getPokemons.service"
 import { GetPokemonsPaginatedService } from "../services/pokemons/getPokemonsPaginated.service"
+import { GetPokemonDetailsByPokemonIdService } from "../services/pokemons/getPokemonDetailsByPokemonId.service"
 import {
   getPokemonsQueryParamsV1Schema,
   getPokemonsQueryParamsV2Schema
@@ -18,7 +27,9 @@ export class PokemonsController {
     @Inject(GetPokemonsService)
     private readonly getPokemonsService: GetPokemonsService,
     @Inject(GetPokemonsPaginatedService)
-    private readonly getPokemonsPaginatedService: GetPokemonsPaginatedService
+    private readonly getPokemonsPaginatedService: GetPokemonsPaginatedService,
+    @Inject(GetPokemonDetailsByPokemonIdService)
+    private readonly getPokemonDetailsByPokemonIdService: GetPokemonDetailsByPokemonIdService
   ) {}
 
   @Version("1")
@@ -29,6 +40,14 @@ export class PokemonsController {
     const filteredQueryParams =
       getPokemonsQueryParamsV1Schema.parse(queryParams)
     return await this.getPokemonsService.execute(filteredQueryParams)
+  }
+
+  @Version("1")
+  @Get("/:pokemonId")
+  async getOne(
+    @Param("pokemonId", ParseIntPipe) pokemonId: number
+  ): Promise<PokemonDetails> {
+    return await this.getPokemonDetailsByPokemonIdService.execute(pokemonId)
   }
 
   @Version("2")
