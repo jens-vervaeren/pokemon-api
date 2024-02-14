@@ -1,17 +1,31 @@
 import { Injectable } from "@nestjs/common"
-import { Pokemon } from "@prisma/client"
+import { Pokemon, Prisma } from "@prisma/client"
 import { PrismaService } from "../../../prisma/services/prisma.service"
-import { GetPokemonsQueryParamsV1 } from "../../schemasAndTypes/pokemons/types"
+import {
+  GetPokemonsFilterOptions,
+  SortQueryParam
+} from "../../schemasAndTypes/pokemons/types"
 
 @Injectable()
 export class GetPokemonsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async execute(options?: GetPokemonsQueryParamsV1): Promise<Pokemon[]> {
+  public async execute(
+    filterOptions?: GetPokemonsFilterOptions
+  ): Promise<Pokemon[]> {
     return await this.prisma.pokemon.findMany({
-      orderBy: {
-        ...options?.sort
-      }
+      skip: filterOptions?.offset,
+      take: filterOptions?.limit,
+      orderBy: this.buildOrderByClause(filterOptions?.sort)
     })
+  }
+
+  private buildOrderByClause(
+    sortParam: SortQueryParam
+  ): Prisma.PokemonOrderByWithRelationInput {
+    if (!sortParam) return {}
+    return {
+      [sortParam[0]]: sortParam[1]
+    }
   }
 }
