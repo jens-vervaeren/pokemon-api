@@ -3,9 +3,11 @@ import { ConfigModule } from "@nestjs/config"
 import { PrismaModule } from "../prisma/prisma.module"
 import { PrismaService } from "../prisma/services/prisma.service"
 import { TeamsController } from "./controllers/teams.controller"
+import { DoPokemonsExistInDbService } from "./services/pokemons/doPokemonsExistInDb.service"
 import { GetAllTeamsService } from "./services/teams/getAllTeams.service"
 import { GetTeamByIdService } from "./services/teams/getTeamById.service"
 import { CreateTeamService } from "./services/teams/createTeam.service"
+import { UpdateTeamPokemonsService } from "./services/teams/updateTeamPokemons.service"
 
 @Module({
   imports: [
@@ -17,9 +19,11 @@ import { CreateTeamService } from "./services/teams/createTeam.service"
   controllers: [TeamsController],
   providers: [
     PrismaService,
+    DoPokemonsExistInDbService,
     GetAllTeamsService,
     GetTeamByIdService,
-    CreateTeamService
+    CreateTeamService,
+    UpdateTeamPokemonsService
   ]
 })
 export class AppModule {}

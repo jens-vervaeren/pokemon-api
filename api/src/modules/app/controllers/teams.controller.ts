@@ -9,12 +9,20 @@ import {
   ParseIntPipe
 } from "@nestjs/common"
 import { Team } from "@prisma/client"
+import { ZodPipe } from "../pipes/zod.pipe"
 import { GetAllTeamsService } from "../services/teams/getAllTeams.service"
 import { GetTeamByIdService } from "../services/teams/getTeamById.service"
-import { ZodPipe } from "../pipes/zod.pipe"
-import { createTeamSchema } from "../schemasAndTypes/teams/schemas"
-import { CreateTeamPayload } from "../schemasAndTypes/teams/types"
 import { CreateTeamService } from "../services/teams/createTeam.service"
+
+import {
+  createTeamSchema,
+  updateTeamPokemonsSchema
+} from "../schemasAndTypes/teams/schemas"
+import {
+  CreateTeamPayload,
+  UpdateTeamPokemonsPayload
+} from "../schemasAndTypes/teams/types"
+import { UpdateTeamPokemonsService } from "../services/teams/updateTeamPokemons.service"
 
 @Controller({
   path: "teams",
@@ -27,7 +35,9 @@ export class TeamsController {
     @Inject(GetTeamByIdService)
     private readonly getTeamByIdService: GetTeamByIdService,
     @Inject(CreateTeamService)
-    private readonly createTeamService: CreateTeamService
+    private readonly createTeamService: CreateTeamService,
+    @Inject(UpdateTeamPokemonsService)
+    private readonly updateTeamPokemonsService: UpdateTeamPokemonsService
   ) {}
 
   @Get()
@@ -35,16 +45,28 @@ export class TeamsController {
     return await this.getAllTeamsService.execute()
   }
 
-  @Get("/:id")
-  async show(@Param("id", ParseIntPipe) id: number): Promise<Team> {
-    return await this.getTeamByIdService.execute(id)
+  @Get("/:teamId")
+  async show(@Param("teamId", ParseIntPipe) teamId: number): Promise<Team> {
+    return await this.getTeamByIdService.execute(teamId)
   }
 
   @Post()
-  @HttpCode(201)
   async createTeam(
     @Body(new ZodPipe(createTeamSchema)) createTeamPayload: CreateTeamPayload
   ): Promise<Team> {
     return await this.createTeamService.execute(createTeamPayload)
+  }
+
+  @Post("/:teamId")
+  @HttpCode(200)
+  async updateTeamPokemons(
+    @Param("teamId", ParseIntPipe) teamId: number,
+    @Body(new ZodPipe(updateTeamPokemonsSchema))
+    updateTeamPokemonsPayload: UpdateTeamPokemonsPayload
+  ): Promise<Team> {
+    return await this.updateTeamPokemonsService.execute(
+      teamId,
+      updateTeamPokemonsPayload
+    )
   }
 }

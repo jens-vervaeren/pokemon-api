@@ -6,10 +6,10 @@ import { PrismaService } from "../../../prisma/services/prisma.service"
 export class GetTeamByIdService {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async execute(id: number): Promise<Team> {
+  public async execute(teamId: number): Promise<Team> {
     const foundTeam = await this.prisma.team.findUnique({
       where: {
-        id
+        id: teamId
       }
     })
 
