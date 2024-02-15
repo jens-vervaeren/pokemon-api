@@ -4,6 +4,7 @@ import { PrismaModule } from "../prisma/prisma.module"
 import { PrismaService } from "../prisma/services/prisma.service"
 import { PokemonsController } from "./controllers/pokemons.controller"
 import { TeamsController } from "./controllers/teams.controller"
+import { SearchController } from "./controllers/search.controller"
 import { GetPokemonsService } from "./services/pokemons/getPokemons.service"
 import { GetPokemonsPaginatedService } from "./services/pokemons/getPokemonsPaginated.service"
 import { DoPokemonsExistInDbService } from "./services/pokemons/doPokemonsExistInDb.service"
@@ -12,6 +13,7 @@ import { GetAllTeamsService } from "./services/teams/getAllTeams.service"
 import { GetTeamByIdService } from "./services/teams/getTeamById.service"
 import { CreateTeamService } from "./services/teams/createTeam.service"
 import { UpdateTeamPokemonsService } from "./services/teams/updateTeamPokemons.service"
+import { SearchPokemonBySearchParamsService } from "./services/search/searchPokemonBySearchParams.service"
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import { UpdateTeamPokemonsService } from "./services/teams/updateTeamPokemons.s
     }),
     PrismaModule
   ],
-  controllers: [PokemonsController, TeamsController],
+  controllers: [PokemonsController, TeamsController, SearchController],
   providers: [
     PrismaService,
     GetPokemonsService,
@@ -30,7 +32,8 @@ import { UpdateTeamPokemonsService } from "./services/teams/updateTeamPokemons.s
     GetAllTeamsService,
     GetTeamByIdService,
     CreateTeamService,
-    UpdateTeamPokemonsService
+    UpdateTeamPokemonsService,
+    SearchPokemonBySearchParamsService
   ]
 })
 export class AppModule {}
