@@ -18,14 +18,18 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/jest/bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:migration:create": "dotenv -e .env.development -- prisma migrate dev --create-only --name",
-    "prisma:migrate:dev": "dotenv -e .env.development -- prisma migrate dev"
+    "prisma:migrate:dev": "dotenv -e .env.development -- prisma migrate dev",
+    "run:command": "NODE_ENV=development node -r ts-node/register src/modules/cliCommands/cli.ts"
   },
   "dependencies": {
+    "@nestjs/axios": "^3.0.2",
     "@nestjs/common": "^10.3.2",
     "@nestjs/config": "^3.2.0",
     "@nestjs/core": "^10.3.2",
     "@nestjs/platform-express": "^10.3.2",
     "@prisma/client": "^5.9.1",
+    "axios": "^1.6.7",
+    "nest-commander": "^3.12.5",
     "prisma": "^5.9.1",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
