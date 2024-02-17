@@ -26,10 +26,10 @@ model PokemonDetails {
   weight    Int
   moves     Json
   order     Int
-  species   String  @db.VarChar(255)
+  species   Json
   stats     Json
   abilities Json
-  forms     String  @db.VarChar(255)
+  forms     Json
   pokemon   Pokemon @relation(fields: [pokemonId], references: [id])
   pokemonId Int     @unique @map("pokemon_id")
 
