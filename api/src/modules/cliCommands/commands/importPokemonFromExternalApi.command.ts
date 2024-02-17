@@ -1,12 +1,13 @@
 import { Inject } from "@nestjs/common"
 import { Command, CommandRunner, Option } from "nest-commander"
-import { CallPokemonApiService } from "../services/callPokemonApi.service"
-import { UpsertPokemonDetailsService } from "../services/pokemons/upsertPokemonDetails.service"
 import {
   upsertPokemonDbEntrySchema,
   upsertPokemonDetailsDbEntrySchema
 } from "../../prisma/schemasAndTypes/pokemons/schemas"
-import { UpsertPokemonService } from "../services/pokemons/upsertPokemon.service"
+import { PrismaService } from "../../prisma/services/prisma.service"
+import { UpsertPokemonDetailsInTransactionService } from "../services/pokemons/upsertPokemonDetailsInTransaction.service"
+import { UpsertPokemonInTransactionService } from "../services/pokemons/upsertPokemonInTransaction.service"
+import { GetPokemonFromApiService } from "../services/pokemons/getPokemonFromApi.service"
 
 interface CommandOptions {
   input?: string
@@ -18,12 +19,14 @@ interface CommandOptions {
 })
 export class ImportPokemonFromExternalApiCommand extends CommandRunner {
   constructor(
-    @Inject(CallPokemonApiService)
-    private readonly callPokemonApiService: CallPokemonApiService,
-    @Inject(UpsertPokemonService)
-    private readonly upsertPokemonService: UpsertPokemonService,
-    @Inject(UpsertPokemonDetailsService)
-    private readonly upsertPokemonDetailsService: UpsertPokemonDetailsService
+    @Inject(GetPokemonFromApiService)
+    private readonly getPokemonFromApiService: GetPokemonFromApiService,
+    @Inject(PrismaService)
+    private readonly prismaService: PrismaService,
+    @Inject(UpsertPokemonInTransactionService)
+    private readonly upsertPokemonInTransactionService: UpsertPokemonInTransactionService,
+    @Inject(UpsertPokemonDetailsInTransactionService)
+    private readonly upsertPokemonDetailsInTransactionService: UpsertPokemonDetailsInTransactionService
   ) {
     super()
   }
@@ -33,17 +36,29 @@ export class ImportPokemonFromExternalApiCommand extends CommandRunner {
       throw new Error("Please provide the input flag to start importing\n")
 
     try {
-      const apiImport = await this.callPokemonApiService.execute(options.input)
-      const pokemonEntry = await this.upsertPokemonService.execute(
-        upsertPokemonDbEntrySchema.parse(apiImport)
+      const apiPokemon = await this.getPokemonFromApiService.execute(
+        options.input
       )
-      await this.upsertPokemonDetailsService.execute(
-        upsertPokemonDetailsDbEntrySchema.parse({
-          ...apiImport,
-          pokemonId: pokemonEntry.id
-        })
-      )
-      console.log(`Pokemon ${pokemonEntry.name} successfully imported\n`)
+
+      await this.prismaService.$transaction(async (t) => {
+        const pokemonEntry =
+          await this.upsertPokemonInTransactionService.execute(
+            t,
+            upsertPokemonDbEntrySchema.parse(apiPokemon)
+          )
+
+        await this.upsertPokemonDetailsInTransactionService.execute(
+          t,
+          upsertPokemonDetailsDbEntrySchema.parse({
+            ...apiPokemon,
+            pokemonId: pokemonEntry.id
+          })
+        )
+
+        console.log(
+          `Pokemon with id ${pokemonEntry.id} and name ${pokemonEntry.name} successfully synced\n`
+        )
+      })
     } catch (error) {
       console.error(error)
     }

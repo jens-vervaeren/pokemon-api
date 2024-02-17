@@ -2,11 +2,11 @@ import { HttpService } from "@nestjs/axios"
 import { Injectable } from "@nestjs/common"
 import { ConfigService } from "@nestjs/config"
 import { firstValueFrom } from "rxjs"
-import { PokemonApiResponse } from "../schemasAndTypes/pokemons/types"
-import { pokemonApiResponseSchema } from "../schemasAndTypes/pokemons/schemas"
+import { PokemonApiResponse } from "../../schemasAndTypes/pokemons/types"
+import { pokemonApiResponseSchema } from "../../schemasAndTypes/pokemons/schemas"
 
 @Injectable()
-export class CallPokemonApiService {
+export class GetPokemonFromApiService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService
