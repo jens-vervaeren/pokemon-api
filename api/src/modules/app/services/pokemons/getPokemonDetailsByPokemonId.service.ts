@@ -1,28 +1,39 @@
 import { Injectable, NotFoundException } from "@nestjs/common"
-import { PokemonDetails } from "@prisma/client"
 import { PrismaService } from "../../../prisma/services/prisma.service"
+import { PokemonWithDetails } from "../../schemasAndTypes/pokemons/types"
+import {
+  getPokemonWithDetailsSchema,
+  parsedPokemonDetailSchema,
+  parsedPokemonSchema
+} from "../../schemasAndTypes/pokemons/schemas"
 
 @Injectable()
 export class GetPokemonDetailsByPokemonIdService {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async execute(pokemonId: number): Promise<PokemonDetails> {
-    const pokemonExists = await this.prisma.pokemon.findUnique({
+  public async execute(pId: number): Promise<PokemonWithDetails> {
+    const pokemon = await this.prisma.pokemon.findUnique({
       where: {
-        id: pokemonId
+        id: pId
       }
     })
 
-    if (!pokemonExists) throw new NotFoundException("Pokemon not found")
+    if (!pokemon) throw new NotFoundException("Pokemon not found")
 
     const foundDetails = await this.prisma.pokemonDetails.findUnique({
       where: {
-        pokemonId
+        pokemonId: pId
       }
     })
 
     if (!foundDetails) throw new NotFoundException("Pokemon details not found")
 
-    return foundDetails
+    const parsedPokemon = parsedPokemonSchema.parse(pokemon)
+    const parsedDetails = parsedPokemonDetailSchema.parse(foundDetails)
+
+    return getPokemonWithDetailsSchema.parse({
+      ...parsedPokemon,
+      ...parsedDetails
+    })
   }
 }

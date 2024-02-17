@@ -1,10 +1,11 @@
 import { z } from "zod"
 import {
+  getPokemonWithDetailsSchema,
   getPokemonsQueryParamsV1Schema,
   getPokemonsQueryParamsV2Schema,
+  parsedPokemonSchema,
   sortQueryParamSchema
 } from "./schemas"
-import { Pokemon } from "@prisma/client"
 
 export type SortQueryParam = z.infer<typeof sortQueryParamSchema>
 
@@ -16,6 +17,9 @@ export type GetPokemonsQueryParamsV2 = z.infer<
 >
 export type GetPokemonsFilterOptions = GetPokemonsQueryParamsV2
 
+export type ParsedPokemon = z.infer<typeof parsedPokemonSchema>
+export type PokemonWithDetails = z.infer<typeof getPokemonWithDetailsSchema>
+
 type PaginationMetadata = {
   next: string
   previous: string
@@ -25,6 +29,6 @@ type PaginationMetadata = {
 }
 
 export type PaginatedPokemon = {
-  data: Pokemon[]
+  data: ParsedPokemon[]
   metadata: PaginationMetadata
 }

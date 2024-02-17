@@ -7,7 +7,6 @@ import {
   Query,
   Version
 } from "@nestjs/common"
-import { Pokemon, PokemonDetails } from "@prisma/client"
 import { GetPokemonsService } from "../services/pokemons/getPokemons.service"
 import { GetPokemonsPaginatedService } from "../services/pokemons/getPokemonsPaginated.service"
 import { GetPokemonDetailsByPokemonIdService } from "../services/pokemons/getPokemonDetailsByPokemonId.service"
@@ -16,9 +15,11 @@ import {
   getPokemonsQueryParamsV2Schema
 } from "../schemasAndTypes/pokemons/schemas"
 import {
+  PokemonWithDetails,
   GetPokemonsQueryParamsV1,
   GetPokemonsQueryParamsV2,
-  PaginatedPokemon
+  PaginatedPokemon,
+  ParsedPokemon
 } from "../schemasAndTypes/pokemons/types"
 
 @Controller("pokemons")
@@ -36,7 +37,7 @@ export class PokemonsController {
   @Get()
   async getAll(
     @Query() queryParams: GetPokemonsQueryParamsV1
-  ): Promise<Pokemon[]> {
+  ): Promise<ParsedPokemon[]> {
     const filteredQueryParams =
       getPokemonsQueryParamsV1Schema.parse(queryParams)
     return await this.getPokemonsService.execute(filteredQueryParams)
@@ -46,7 +47,7 @@ export class PokemonsController {
   @Get("/:pokemonId")
   async getOne(
     @Param("pokemonId", ParseIntPipe) pokemonId: number
-  ): Promise<PokemonDetails> {
+  ): Promise<PokemonWithDetails> {
     return await this.getPokemonDetailsByPokemonIdService.execute(pokemonId)
   }
 
