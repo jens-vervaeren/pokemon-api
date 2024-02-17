@@ -67,18 +67,20 @@ const spritesSchema = z.object({
     }),
     "official-artwork": z.object({
       front_default: z.string().nullable(),
-      front_shiny: z.string().nullable()
+      front_shiny: z.string().nullable().optional()
     }),
-    showdown: z.object({
-      back_default: z.string().nullable(),
-      back_female: z.string().nullable(),
-      back_shiny: z.string().nullable(),
-      back_shiny_female: z.string().nullable(),
-      front_default: z.string().nullable(),
-      front_female: z.string().nullable(),
-      front_shiny: z.string().nullable(),
-      front_shiny_female: z.string().nullable()
-    })
+    showdown: z
+      .object({
+        back_default: z.string().nullable(),
+        back_female: z.string().nullable(),
+        back_shiny: z.string().nullable(),
+        back_shiny_female: z.string().nullable(),
+        front_default: z.string().nullable(),
+        front_female: z.string().nullable(),
+        front_shiny: z.string().nullable(),
+        front_shiny_female: z.string().nullable()
+      })
+      .optional()
   }),
   versions: z.object({
     "generation-i": z.object({

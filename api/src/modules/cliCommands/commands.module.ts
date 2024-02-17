@@ -7,6 +7,9 @@ import { ImportPokemonFromExternalApiCommand } from "./commands/importPokemonFro
 import { CallPokemonApiService } from "./services/callPokemonApi.service"
 import { UpsertPokemonService } from "./services/pokemons/upsertPokemon.service"
 import { UpsertPokemonDetailsService } from "./services/pokemons/upsertPokemonDetails.service"
+import { ImportPokemonsFromFileCommand } from "./commands/importPokemonsFromFile.command"
+import { UpsertPokemonInTransactionService } from "./services/pokemons/upsertPokemonInTransaction.service"
+import { UpsertPokemonDetailsInTransactionService } from "./services/pokemons/upsertPokemonDetailsInTransaction.service"
 
 @Module({
   imports: [
@@ -20,8 +23,11 @@ import { UpsertPokemonDetailsService } from "./services/pokemons/upsertPokemonDe
     PrismaService,
     UpsertPokemonService,
     UpsertPokemonDetailsService,
+    UpsertPokemonInTransactionService,
+    UpsertPokemonDetailsInTransactionService,
     CallPokemonApiService,
-    ImportPokemonFromExternalApiCommand
+    ImportPokemonFromExternalApiCommand,
+    ImportPokemonsFromFileCommand
   ]
 })
 export class CommandsModule {}
