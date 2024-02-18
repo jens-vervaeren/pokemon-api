@@ -18,7 +18,7 @@ import { SearchPokemonBySearchParamsService } from "./services/search/searchPoke
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.env.${process.env.NODE_ENV}`
+      envFilePath: `.env.${process.env.ENV ?? "development"}`
     }),
     PrismaModule
   ],
