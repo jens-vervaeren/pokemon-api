@@ -6,7 +6,8 @@ import {
   HttpCode,
   Inject,
   Param,
-  ParseIntPipe
+  ParseIntPipe,
+  UseGuards
 } from "@nestjs/common"
 import { Team } from "@prisma/client"
 import { ZodPipe } from "../../../pipes/zod.pipe"
@@ -23,11 +24,13 @@ import {
   UpdateTeamPokemonsPayload
 } from "../schemasAndTypes/teams/types"
 import { UpdateTeamPokemonsService } from "../services/teams/updateTeamPokemons.service"
+import { AuthGuard } from "../../auth/guards/auth.guard"
 
 @Controller({
   path: "teams",
   version: "1"
 })
+@UseGuards(AuthGuard)
 export class TeamsController {
   constructor(
     @Inject(GetAllTeamsService)
@@ -52,7 +55,8 @@ export class TeamsController {
 
   @Post()
   async createTeam(
-    @Body(new ZodPipe(createTeamSchema)) createTeamPayload: CreateTeamPayload
+    @Body(new ZodPipe(createTeamSchema))
+    createTeamPayload: CreateTeamPayload
   ): Promise<Team> {
     return await this.createTeamService.execute(createTeamPayload)
   }

@@ -14,13 +14,16 @@ import { GetTeamByIdService } from "./services/teams/getTeamById.service"
 import { CreateTeamService } from "./services/teams/createTeam.service"
 import { UpdateTeamPokemonsService } from "./services/teams/updateTeamPokemons.service"
 import { SearchPokemonBySearchParamsService } from "./services/search/searchPokemonBySearchParams.service"
+import { AuthModule } from "../auth/auth.module"
+import { AuthGuard } from "../auth/guards/auth.guard"
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: `.env.${process.env.ENV ?? "development"}`
     }),
-    PrismaModule
+    PrismaModule,
+    AuthModule
   ],
   controllers: [PokemonsController, TeamsController, SearchController],
   providers: [
@@ -33,7 +36,8 @@ import { SearchPokemonBySearchParamsService } from "./services/search/searchPoke
     GetTeamByIdService,
     CreateTeamService,
     UpdateTeamPokemonsService,
-    SearchPokemonBySearchParamsService
+    SearchPokemonBySearchParamsService,
+    AuthGuard
   ]
 })
 export class AppModule {}
