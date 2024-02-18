@@ -9,7 +9,7 @@ import {
   ParseIntPipe
 } from "@nestjs/common"
 import { Team } from "@prisma/client"
-import { ZodPipe } from "../pipes/zod.pipe"
+import { ZodPipe } from "../../../pipes/zod.pipe"
 import { GetAllTeamsService } from "../services/teams/getAllTeams.service"
 import { GetTeamByIdService } from "../services/teams/getTeamById.service"
 import { CreateTeamService } from "../services/teams/createTeam.service"
